@@ -7,22 +7,23 @@ from time import sleep
 
 # Define flashcard class
 class Flashcard:
+    # Define set name to allow different sets of flashcards
     def __init__(self):
+        self.set_name = 'NA'
         self.flashcards = self.load_flashcards()
+        
 
     # Load json file with terms and definitions
     def load_flashcards(self):
         try:
-            with open('flashcards.json', 'r') as file:
+            with open(f'{self.set_name}.json', 'r') as file:
                 return json.load(file)
         # If no file found, return default dictionary
         except FileNotFoundError:
-            return {'IP': 'Internet Protocol',
-                    'TCP': 'Transmission Control Protocol',
-                    'UDP': 'User Datagram Protocol'}
+            return {'This is ': 'A test'}
 
     def save_flashcards(self):
-        with open('flashcards.json', 'w') as file:
+        with open(f'{self.set_name}.json', 'w') as file:
             json.dump(self.flashcards, file)
 
     def quiz(self):
@@ -65,21 +66,96 @@ class Flashcard:
             print(f'({count}) {key} : {value}')
             count += 1
 
-if __name__ == '__main__':
-    fc = Flashcard()
-
-    if len(sys.argv) == 3:
-        # If there are 3 arguments (file, key, value), they may be added in through the command line
-        new_key = sys.argv[1]
-        new_value = sys.argv[2]
-
-        fc.new_entry(new_key, new_value)
-        print(fc.flashcards)
+    def create_set(self):
+        new_set_name = input("Set name: ")
+        self.set_name = new_set_name
+        self.flashcards = self.load_flashcards()
+        self.save_flashcards()
+        print(f'Flashcard Set: "{new_set_name}" was created successfully.')
+        time.sleep(3)
         os.system('clear')
 
-    os.system('clear')
+    def set_selection(self):
+        # Add set selection method
+        set_names = [filename.split('.')[0] for filename in os.listdir() if filename.endswith('.json')]
+    
+        if not set_names:
+            print("No flashcard sets found.")
+            return
+        
+        print("Available flashcard sets:")
+        for i, set_name in enumerate(set_names, 1):
+            print(f"{i}. {set_name}")
 
-    print("Welcome to Flashcards by Brix\nEnter 0 at any time to exit.\nWhat would you like to do?\n")
+        set_index = input("\nEnter the number corresponding to the set you want to select: ")
+
+        try:
+            selected_set_name = set_names[int(set_index) - 1]
+            self.set_name = selected_set_name
+            self.flashcards = self.load_flashcards()
+            os.system('clear')
+            print(f"Selected flashcard set: {selected_set_name}")
+            time.sleep(3)
+            os.system('clear')
+        except (ValueError, IndexError):
+            print("Invalid selection.")
+
+    def delete_set(self):
+        set_names = [filename.split('.')[0] for filename in os.listdir() if filename.endswith('.json')]
+        
+        if not set_names:
+            print("No flashcard sets found.")
+            return
+
+        print("Available flashcard sets:")
+        for i, set_name in enumerate(set_names, 1):
+            print(f"{i}. {set_name}")
+
+        set_index = input("\nEnter the number corresponding to the set you want to delete: ")
+
+        try:
+            selected_set_name = set_names[int(set_index) - 1]
+            confirmation = input(f"Are you sure you want to delete the flashcard set '{selected_set_name}'? (y/n): ")
+
+            if confirmation.lower() == 'y':
+                os.remove(f"{selected_set_name}.json")
+                print(f"Flashcard set '{selected_set_name}' deleted.")
+                time.sleep(3)
+                os.system('clear')
+            else:
+                print("Deletion canceled.")
+        except (ValueError, IndexError):
+            print("Invalid selection.")
+
+
+
+
+if __name__ == '__main__':
+    os.system('clear')
+    fc = Flashcard()
+
+    while (True):
+        print("Welcome to Flashcards by Brix\nEnter 0 at any time to exit.\nWhat would you like to do?\n")
+
+        init_choice = input("1) Select a flashcard set\n2) Create a new flashcard set\n3) Delete flashcard set\n\nInput: ")
+
+        if init_choice == '1':
+            os.system('clear')
+            fc.set_selection()
+            break
+            # Add method to select flashcard set     
+
+        elif init_choice == '2':
+            os.system('clear')
+            fc.create_set()
+            continue
+
+        elif init_choice == '3':
+            os.system('clear')
+            fc.delete_set()
+            continue
+
+
 
     while True:
         choice = input("1) Quiz yourself\n2) Add a term and definition\n3) View flashcards\n\nInput: ")
@@ -87,6 +163,7 @@ if __name__ == '__main__':
         if choice == '1':
             os.system('clear')
             fc.quiz()
+
         elif choice == '2':
             while True:
                 os.system('clear')
@@ -123,9 +200,9 @@ if __name__ == '__main__':
                 print('Not valid choice. Returning to main menu.')
                 time.sleep(1)
                 os.system('clear')
-                
-        
 
+        
+            
         elif choice == '0':
             print("Exiting program.")
             break
