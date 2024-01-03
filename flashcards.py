@@ -31,18 +31,33 @@ class Flashcard:
         while True:
             term, definition = ch(list(self.flashcards.items()))
 
+            print('Press Enter to continue | Press 1 to go back to menu\n')
+
             print(term)
-            answer = input('')
+            answer = input()
+
             if answer == '0':
                 fc.exit_program()
-            elif answer.lower() == definition.lower():
-                print('\nCorrect')
-                sleep(1)
+
+            elif answer == '1':
                 os.system('clear')
+                return 
+
             else:
-                print('\nIncorrect')
-                sleep(1)
                 os.system('clear')
+                print('Press Enter to continue | Press 1 to go back to menu\n')
+                print(f'{term} : {definition}')
+                input()
+                os.system('clear')
+
+            #elif answer.lower() == definition.lower():
+                #print('\nCorrect')
+                #sleep(1)
+                #os.system('clear')
+            #else:
+                #print('\nIncorrect')
+                #sleep(1)
+                #os.system('clear')
 
     # Add a new item to the flashcard set
     def new_entry(self, key, value):
@@ -79,7 +94,7 @@ class Flashcard:
         self.flashcards = self.load_flashcards()
         self.save_flashcards()
         print(f'Flashcard Set: "{new_set_name}" was created successfully.')
-        time.sleep(3)
+        time.sleep(2)
         os.system('clear')
 
     # Select set if there are some available; If not provide error message
@@ -108,11 +123,11 @@ class Flashcard:
             self.flashcards = self.load_flashcards()
             os.system('clear')
             print(f"Selected flashcard set: {selected_set_name}")
-            time.sleep(3)
+            time.sleep(1)
             os.system('clear')
         except (ValueError, IndexError):
             print("Invalid selection.")
-            time.sleep(2)
+            time.sleep(1)
             os.system('clear')
 
     # Remove flashcard list 
@@ -150,6 +165,7 @@ class Flashcard:
         os.system('clear')
         print('Exiting program')
         time.sleep(1)
+        os.system('clear')
         sys.exit()
 
     def main_menu(self):
