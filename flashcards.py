@@ -11,7 +11,6 @@ class Flashcard:
     def __init__(self):
         self.set_name = 'NA'
         self.flashcards = self.load_flashcards()
-        
 
     # Load json file with terms and definitions
     def load_flashcards(self):
@@ -22,18 +21,20 @@ class Flashcard:
         except FileNotFoundError:
             return {'This is ': 'A test'}
 
+    # Save current flashcard set into a JSON file
     def save_flashcards(self):
         with open(f'{self.set_name}.json', 'w') as file:
             json.dump(self.flashcards, file)
 
+    # Provide key and answer with a value
     def quiz(self):
         while True:
             term, definition = ch(list(self.flashcards.items()))
 
             print(term)
             answer = input('')
-            if answer == '1':
-                break
+            if answer == '0':
+                fc.exit_program()
             elif answer.lower() == definition.lower():
                 print('\nCorrect')
                 sleep(1)
@@ -43,6 +44,7 @@ class Flashcard:
                 sleep(1)
                 os.system('clear')
 
+    # Add a new item to the flashcard set
     def new_entry(self, key, value):
         self.flashcards[key] = value
         self.save_flashcards()
@@ -60,14 +62,19 @@ class Flashcard:
             print(f'Entry "{pick}" not found.')
             os.system('clear')
 
+    # Show the items in the selected flashcard list
     def show_hand(self):
         count = 1
         for key, value in self.flashcards.items():
             print(f'({count}) {key} : {value}')
             count += 1
 
+    # Create new flashcard sets
     def create_set(self):
         new_set_name = input("Set name: ")
+        if new_set_name == '0':
+            fc.exit_program()
+
         self.set_name = new_set_name
         self.flashcards = self.load_flashcards()
         self.save_flashcards()
@@ -75,12 +82,15 @@ class Flashcard:
         time.sleep(3)
         os.system('clear')
 
+    # Select set if there are some available; If not provide error message
     def set_selection(self):
-        # Add set selection method
         set_names = [filename.split('.')[0] for filename in os.listdir() if filename.endswith('.json')]
     
         if not set_names:
             print("No flashcard sets found.")
+            time.sleep(2)
+            os.system('clear')
+            fc.main_menu()
             return
         
         print("Available flashcard sets:")
@@ -88,6 +98,9 @@ class Flashcard:
             print(f"{i}. {set_name}")
 
         set_index = input("\nEnter the number corresponding to the set you want to select: ")
+
+        if set_index == '0':
+            fc.exit_program()
 
         try:
             selected_set_name = set_names[int(set_index) - 1]
@@ -99,12 +112,16 @@ class Flashcard:
             os.system('clear')
         except (ValueError, IndexError):
             print("Invalid selection.")
+            time.sleep(2)
+            os.system('clear')
 
+    # Remove flashcard list 
     def delete_set(self):
         set_names = [filename.split('.')[0] for filename in os.listdir() if filename.endswith('.json')]
         
         if not set_names:
             print("No flashcard sets found.")
+            os.system('clear')
             return
 
         print("Available flashcard sets:")
@@ -112,6 +129,8 @@ class Flashcard:
             print(f"{i}. {set_name}")
 
         set_index = input("\nEnter the number corresponding to the set you want to delete: ")
+        if set_index == '0':
+            fc.exit_program()
 
         try:
             selected_set_name = set_names[int(set_index) - 1]
@@ -127,38 +146,55 @@ class Flashcard:
         except (ValueError, IndexError):
             print("Invalid selection.")
 
+    def exit_program(self):
+        os.system('clear')
+        print('Exiting program')
+        time.sleep(1)
+        sys.exit()
+
+    def main_menu(self):
+        while (True):
+            print("Welcome to Flashcards by Brix\nEnter 0 at any time to exit.\nWhat would you like to do?\n")
+
+            init_choice = input("1) Select a flashcard set\n2) Create a new flashcard set\n3) Delete flashcard set\n\nInput: ")
+
+            # Exit program
+            if init_choice == '0':
+                fc.exit_program()
+
+            # Select flashcard set
+            elif init_choice == '1':
+                os.system('clear')
+                fc.set_selection()
+                break
+           
+            # Create new flashcard set
+            elif init_choice == '2':
+                os.system('clear')
+                fc.create_set()
+                continue
+
+            # Delete flashcard set
+            elif init_choice == '3':
+                os.system('clear')
+                fc.delete_set()
+                continue
+
+            else:
+                print("Invalid input")
+                time.sleep(1)
+                os.system('clear')
+                continue 
 
 
-
+# If flashcards.py is called through a CLI 
 if __name__ == '__main__':
     os.system('clear')
     fc = Flashcard()
-
-    while (True):
-        print("Welcome to Flashcards by Brix\nEnter 0 at any time to exit.\nWhat would you like to do?\n")
-
-        init_choice = input("1) Select a flashcard set\n2) Create a new flashcard set\n3) Delete flashcard set\n\nInput: ")
-
-        if init_choice == '1':
-            os.system('clear')
-            fc.set_selection()
-            break
-            # Add method to select flashcard set     
-
-        elif init_choice == '2':
-            os.system('clear')
-            fc.create_set()
-            continue
-
-        elif init_choice == '3':
-            os.system('clear')
-            fc.delete_set()
-            continue
-
-
+    fc.main_menu()
 
     while True:
-        choice = input("1) Quiz yourself\n2) Add a term and definition\n3) View flashcards\n\nInput: ")
+        choice = input("1) Quiz yourself\n2) Add a term and definition\n3) View flashcards\n4) Back to main menu\n\nInput: ")
 
         if choice == '1':
             os.system('clear')
@@ -201,7 +237,9 @@ if __name__ == '__main__':
                 time.sleep(1)
                 os.system('clear')
 
-        
+        elif choice == '4':
+            os.system('clear')
+            fc.main_menu()
             
         elif choice == '0':
             print("Exiting program.")
