@@ -7,7 +7,7 @@ from random import choice as ch
 from time import sleep
 
 # Enter user API key associated with OpenAPI Account
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="")
 
 # Define flashcard class
 class Flashcard:
