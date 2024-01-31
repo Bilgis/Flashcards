@@ -44,24 +44,15 @@ class Flashcard:
                 fc.exit_program()
 
             elif answer == '1':
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 return 
 
             else:
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 print('Press Enter to continue | Press 1 to go back to menu\n')
                 print(f'{term} : {definition}')
                 input()
-                os.system('cls')
-
-            #elif answer.lower() == definition.lower():
-                #print('\nCorrect')
-                #sleep(1)
-                #os.system('cls')
-            #else:
-                #print('\nIncorrect')
-                #sleep(1)
-                #os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
     # Add a new item to the flashcard set
     def new_entry(self, key, value):
@@ -75,11 +66,11 @@ class Flashcard:
             print(f'Entry "{pick}" deleted.')
             self.save_flashcards()
             time.sleep(1)
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
         else:
             print(f'Entry "{pick}" not found.')
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
     # Show the items in the selected flashcard list
     def show_hand(self):
@@ -99,7 +90,7 @@ class Flashcard:
         self.save_flashcards()
         print(f'Flashcard Set: "{new_set_name}" was created successfully.')
         time.sleep(2)
-        os.system('cls')
+        os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
     # Select set if there are some available; If not provide error message
     def set_selection(self):
@@ -108,7 +99,7 @@ class Flashcard:
         if not set_names:
             print("No flashcard sets found.")
             time.sleep(2)
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             fc.main_menu()
             return
         
@@ -125,14 +116,14 @@ class Flashcard:
             selected_set_name = set_names[int(set_index) - 1]
             self.set_name = selected_set_name
             self.flashcards = self.load_flashcards()
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             print(f"Selected flashcard set: {selected_set_name}")
             time.sleep(1)
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
         except (ValueError, IndexError):
             print("Invalid selection.")
             time.sleep(1)
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
     # Remove flashcard list 
     def delete_set(self):
@@ -140,7 +131,7 @@ class Flashcard:
         
         if not set_names:
             print("No flashcard sets found.")
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             return
 
         print("Available flashcard sets:")
@@ -159,17 +150,17 @@ class Flashcard:
                 os.remove(f"{selected_set_name}.json")
                 print(f"Flashcard set '{selected_set_name}' deleted.")
                 time.sleep(3)
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             else:
                 print("Deletion canceled.")
         except (ValueError, IndexError):
             print("Invalid selection.")
 
     def exit_program(self):
-        os.system('cls')
+        os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
         print('Exiting program')
         time.sleep(1)
-        os.system('cls')
+        os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
         sys.exit()
 
     def chatbot(self):
@@ -179,7 +170,7 @@ class Flashcard:
 
         # Send request with user's question
         completion = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": question}])
-        os.system('cls')
+        os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
         # Print results and ask again
         print(completion.choices[0].message.content)
@@ -187,24 +178,24 @@ class Flashcard:
 
         # Decide to exit to main menu or ask again
         while aiChoice == '1':
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             # Ask for a question
             question = input('What would you like to know? \n\n')
 
             # Send request with user's question
             completion = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": question}])
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
             # Print results and ask again
             print(completion.choices[0].message.content)
             aiChoice = input('\n\n(1) Ask again\n(2) Exit\n\n')
 
         if aiChoice == '2':
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             fc.main_menu()
 
     def main_menu(self):
-        while (True):
+        while True:
             print("Welcome to Flashcards by Brix\nEnter 0 at any time to exit.\nWhat would you like to do?\n")
 
             init_choice = input("1) Select a flashcard set\n2) Create a new flashcard set\n3) Delete flashcard set\n4) ChatGPT Assistant\n\nInput: ")
@@ -215,37 +206,37 @@ class Flashcard:
 
             # Select flashcard set
             elif init_choice == '1':
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 fc.set_selection()
                 break
            
             # Create new flashcard set
             elif init_choice == '2':
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 fc.create_set()
                 continue
 
             # Delete flashcard set
             elif init_choice == '3':
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 fc.delete_set()
                 continue
 
             elif init_choice == '4':
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 fc.chatbot()
                 continue
 
             else:
                 print("Invalid input")
                 time.sleep(1)
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 continue 
 
 
 # If flashcards.py is called through a CLI 
 if __name__ == '__main__':
-    os.system('cls')
+    os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
     fc = Flashcard()
     fc.main_menu()
 
@@ -253,12 +244,12 @@ if __name__ == '__main__':
         choice = input("1) Quiz yourself\n2) Add a term and definition\n3) View flashcards\n4) Back to main menu\n\nInput: ")
 
         if choice == '1':
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             fc.quiz()
 
         elif choice == '2':
             while True:
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 key = input("Enter side A: ")
                 value = input("Enter side B: ")
                 fc.new_entry(key, value)
@@ -269,21 +260,21 @@ if __name__ == '__main__':
                     continue
                 else:
                     print("Invalid input")
-                    os.system('cls')
+                    os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                     break
 
         elif choice == '3':
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             fc.show_hand()
 
             back_choice = input("\n\n1) Go back\n2) Delete Entry\n")
 
             if back_choice == '1':
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 continue
 
             elif back_choice == '2':
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
                 fc.show_hand()
                 entry_to_delete = input("\n\nEnter the term you want to delete: ")
                 fc.delete_entry(entry_to_delete)
@@ -291,10 +282,10 @@ if __name__ == '__main__':
             else:
                 print('Not valid choice. Returning to main menu.')
                 time.sleep(1)
-                os.system('cls')
+                os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
 
         elif choice == '4':
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             fc.main_menu()
             
         elif choice == '0':
@@ -302,7 +293,7 @@ if __name__ == '__main__':
             break
 
         else:
-            print("Inavlid input")
+            print("Invalid input")
             time.sleep(1)
-            os.system('cls')
+            os.system('cls' if os.name == 'nt' else 'clear')  # Use 'cls' on Windows, 'clear' on Unix-like systems
             continue
